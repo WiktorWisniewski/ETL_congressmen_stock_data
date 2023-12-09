@@ -81,7 +81,8 @@ def get_stock_data():
 def upload_data_to_redshift():
     print('Loading function')
 
-    secret_name='redshift!congress-admin' # getting SecretId from Environment varibales
+    # getting SecretId from Environment varibales
+    secret_name=os.environ['secret_name'] 
     session = boto3.session.Session()
     region = session.region_name
     
