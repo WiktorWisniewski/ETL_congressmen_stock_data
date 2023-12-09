@@ -118,7 +118,7 @@ def upload_data_to_redshift():
     client_redshift = session.client("redshift-data", config = config)
     
 
-    query_str = f"COPY congress_data FROM 's3://congressmenstockdata/{key}/transaction_report.csv' iam_role f{os.environ["IAM_role"]} CSV DELIMITER AS ',' DATEFORMAT 'auto' IGNOREHEADER 1 ;"
+    query_str = f"COPY congress_data FROM 's3://{os.environ['bucket_name']}/{key}/transaction_report.csv' iam_role f{os.environ["IAM_role"]} CSV DELIMITER AS ',' DATEFORMAT 'auto' IGNOREHEADER 1 ;"
     try:
         result = client_redshift.execute_statement(WorkgroupName = os.environ['Workgroup'], Database= os.environ['database', SecretArn= secret_arn, Sql= query_str)
         print("API successfully executed")
