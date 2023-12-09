@@ -115,17 +115,17 @@ def upload_data_to_redshift():
     
     # Initializing Redshift's client   
     config = Config(connect_timeout=5, read_timeout=5)
-    client_redshift = session.client("redshift-data", config = config)
+    client_redshift = session.client(os.environ['cluster'], config = config)
     
 
     query_str = f"COPY congress_data FROM 's3://{os.environ['bucket_name']}/{key}/transaction_report.csv' iam_role f{os.environ["IAM_role"]} CSV DELIMITER AS ',' DATEFORMAT 'auto' IGNOREHEADER 1 ;"
     try:
-        result = client_redshift.execute_statement(WorkgroupName = os.environ['Workgroup'], Database= os.environ['database', SecretArn= secret_arn, Sql= query_str)
+        result = client_redshift.execute_statement(WorkgroupName = os.environ['Workgroup'], Database= os.environ['database'], SecretArn= secret_arn, Sql= query_str)
         print("API successfully executed")
         
     except botocore.exceptions.ConnectionError as e:
-        client_redshift_1 = session.client("redshift-data", config = config)
-        result = client_redshift_1.execute_statement(Database= 'dev', SecretArn= secret_arn, Sql= query_str, ClusterIdentifier= os.environ['Cluster_Identifier'])
+        client_redshift_1 = session.client(os.environ['cluster'], config = config)
+        result = client_redshift_1.execute_statement(WorkgroupName = os.environ['Workgroup'], Database= os.environ['database'], SecretArn= secret_arn, Sql= query_str)
         print("API executed after reestablishing the connection")
         return str(result)
         
